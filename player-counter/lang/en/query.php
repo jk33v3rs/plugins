@@ -6,12 +6,19 @@ return [
     'type' => 'Type',
     'port_offset' => 'Query Port Offset',
     'no_offset' => 'No Offset',
+    'port_offset_hint' => 'The offset that will be added to the allocation port. Usually empty/0 or 1.',
+    'port_variable' => 'Query Port Variable',
+    'no_variable' => 'No Variable',
+    'port_variable_hint' => 'The env name of the startup variable that will be used to get the query port, e.g. "QUERY_PORT". When a value is set the query port offset will be ignored! Leave empty to use the allocation port and offset.',
     'eggs' => 'Eggs',
     'no_eggs' => 'No Eggs',
     'hostname' => 'Hostname',
     'players' => 'Players',
     'map' => 'Map',
     'unknown' => 'Unknown',
+
+    'kick' => 'Kick',
+    'ban' => 'Ban',
 
     'whitelisted' => 'Whitelisted',
     'add_to_whitelist' => 'Add to whitelist',
@@ -35,6 +42,9 @@ return [
 
         'player_kicked' => 'Player kicked from server',
         'player_kick_failed' => 'Could not kick player',
+
+        'player_banned' => 'Player banned from server',
+        'player_ban_failed' => 'Could not ban player',
 
         'player_whitelist_add' => 'Player added to whitelist',
         'player_whitelist_remove' => 'Player removed from whitelist',

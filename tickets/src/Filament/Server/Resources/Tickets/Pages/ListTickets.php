@@ -5,7 +5,6 @@ namespace Boy132\Tickets\Filament\Server\Resources\Tickets\Pages;
 use Boy132\Tickets\Enums\TicketStatus;
 use Boy132\Tickets\Filament\Server\Resources\Tickets\TicketResource;
 use Boy132\Tickets\Models\Ticket;
-use Filament\Actions\CreateAction;
 use Filament\Facades\Filament;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -18,14 +17,6 @@ class ListTickets extends ListRecords
     public function getBreadcrumbs(): array
     {
         return [];
-    }
-
-    protected function getHeaderActions(): array
-    {
-        return [
-            CreateAction::make()
-                ->createAnother(false),
-        ];
     }
 
     public function getTabs(): array

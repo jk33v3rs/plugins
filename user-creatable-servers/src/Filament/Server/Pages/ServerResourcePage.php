@@ -69,7 +69,7 @@ class ServerResourcePage extends ServerFormPage
                     ->hint(fn ($state) => $userResourceLimits->cpu > 0 ? ($maxCpu - $state . '% ' . trans('user-creatable-servers::strings.left')) : trans('user-creatable-servers::strings.unlimited'))
                     ->hintColor(fn ($state) => $userResourceLimits->cpu > 0 && $maxCpu - $state < 0 ? 'danger' : null)
                     ->numeric()
-                    ->minValue(1)
+                    ->minValue($userResourceLimits->cpu > 0 ? 1 : 0)
                     ->maxValue($userResourceLimits->cpu > 0 ? $maxCpu : null)
                     ->suffix('%'),
                 TextInput::make('memory')
@@ -79,7 +79,7 @@ class ServerResourcePage extends ServerFormPage
                     ->hint(fn ($state) => $userResourceLimits->memory > 0 ? ($maxMemory - $state . $suffix . ' ' . trans('user-creatable-servers::strings.left')) : trans('user-creatable-servers::strings.unlimited'))
                     ->hintColor(fn ($state) => $userResourceLimits->memory > 0 && $maxMemory - $state < 0 ? 'danger' : null)
                     ->numeric()
-                    ->minValue(1)
+                    ->minValue($userResourceLimits->memory > 0 ? 1 : 0)
                     ->maxValue($userResourceLimits->memory > 0 ? $maxMemory : null)
                     ->suffix($suffix),
                 TextInput::make('disk')
@@ -89,7 +89,7 @@ class ServerResourcePage extends ServerFormPage
                     ->hint(fn ($state) => $userResourceLimits->disk > 0 ? ($maxDisk - $state . $suffix . ' ' . trans('user-creatable-servers::strings.left')) : trans('user-creatable-servers::strings.unlimited'))
                     ->hintColor(fn ($state) => $userResourceLimits->disk > 0 && $maxDisk - $state < 0 ? 'danger' : null)
                     ->numeric()
-                    ->minValue(1)
+                    ->minValue($userResourceLimits->disk > 0 ? 1 : 0)
                     ->maxValue($userResourceLimits->disk > 0 ? $maxDisk : null)
                     ->suffix($suffix),
             ]);
@@ -109,14 +109,15 @@ class ServerResourcePage extends ServerFormPage
 
         return [
             Action::make('save')
-                ->label(trans('filament-panels::resources/pages/edit-record.form.actions.save.label'))
+                ->hiddenLabel()
                 ->action('save')
-                ->formId('form')
-                ->keyBindings(['mod+s']),
+                ->keyBindings(['mod+s'])
+                ->tooltip(trans('filament-panels::resources/pages/edit-record.form.actions.save.label'))
+                ->icon('tabler-device-floppy'),
             Action::make('delete_server')
                 ->visible(fn () => config('user-creatable-servers.can_users_delete_servers'))
                 ->authorize(fn () => $server->owner_id === auth()->user()->id || auth()->user()->can('delete server', $server))
-                ->label(trans('user-creatable-servers::strings.modals.delete_server'))
+                ->tooltip(trans('user-creatable-servers::strings.modals.delete_server'))
                 ->color('danger')
                 ->icon('tabler-trash')
                 ->requiresConfirmation()

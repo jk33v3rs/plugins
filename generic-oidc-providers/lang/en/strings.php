@@ -7,6 +7,7 @@ return [
     'display_color' => 'Display Color',
     'display_icon' => 'Display Icon',
     'base_url' => 'Base URL',
+    'redirect_url' => 'Redirect URL',
     'verify_jwt' => 'Verify JWT?',
     'jwt_public_key' => 'JWT Public Key',
 ];

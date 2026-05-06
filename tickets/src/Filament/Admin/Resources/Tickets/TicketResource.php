@@ -16,7 +16,7 @@ use Boy132\Tickets\Filament\Admin\Resources\Tickets\RelationManagers\MessagesRel
 use Boy132\Tickets\Filament\Components\Actions\AnswerAction;
 use Boy132\Tickets\Filament\Components\Actions\AssignToMeAction;
 use Boy132\Tickets\Models\Ticket;
-use Filament\Actions\ActionGroup;
+use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
@@ -110,13 +110,15 @@ class TicketResource extends Resource
                     ->toggleable(),
             ])
             ->recordActions([
-                ActionGroup::make([
-                    ViewAction::make(),
-                    EditAction::make(),
-                    AnswerAction::make(),
-                    AssignToMeAction::make(),
-                    DeleteAction::make(),
-                ]),
+                ViewAction::make()
+                    ->hidden(fn ($record) => static::getEditAuthorizationResponse($record)->allowed()),
+                EditAction::make(),
+                AnswerAction::make(),
+                AssignToMeAction::make(),
+                DeleteAction::make(),
+            ])
+            ->toolbarActions([
+                CreateAction::make(),
             ])
             ->groups([
                 Group::make('category')

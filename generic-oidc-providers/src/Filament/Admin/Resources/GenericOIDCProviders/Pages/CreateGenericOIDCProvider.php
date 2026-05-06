@@ -3,6 +3,7 @@
 namespace Boy132\GenericOIDCProviders\Filament\Admin\Resources\GenericOIDCProviders\Pages;
 
 use Boy132\GenericOIDCProviders\Filament\Admin\Resources\GenericOIDCProviders\GenericOIDCProviderResource;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Str;
 
@@ -12,16 +13,19 @@ class CreateGenericOIDCProvider extends CreateRecord
 
     protected static bool $canCreateAnother = false;
 
-    protected function getFormActions(): array
-    {
-        return [];
-    }
-
     protected function getHeaderActions(): array
     {
         return [
-            $this->getCreateFormAction()->formId('form'),
+            $this->getCreateFormAction()->formId('form')
+                ->tooltip(fn (Action $action) => $action->getLabel())
+                ->hiddenLabel()
+                ->icon('tabler-plus'),
         ];
+    }
+
+    protected function getFormActions(): array
+    {
+        return [];
     }
 
     protected function mutateFormDataBeforeCreate(array $data): array

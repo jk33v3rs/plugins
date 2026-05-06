@@ -4,7 +4,7 @@ namespace Boy132\Announcements\Filament\Admin\Resources\Announcements;
 
 use Boy132\Announcements\Filament\Admin\Resources\Announcements\Pages\ManageAnnouncements;
 use Boy132\Announcements\Models\Announcement;
-use Filament\Actions\ActionGroup;
+use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
@@ -70,12 +70,14 @@ class AnnouncementResource extends Resource
                     ->dateTime(),
             ])
             ->recordActions([
-                ActionGroup::make([
-                    ViewAction::make()
-                        ->hidden(fn ($record) => static::canEdit($record)),
-                    EditAction::make(),
-                    DeleteAction::make(),
-                ]),
+                ViewAction::make()
+                    ->hidden(fn ($record) => static::getEditAuthorizationResponse($record)->allowed()),
+                EditAction::make(),
+                DeleteAction::make(),
+            ])
+            ->toolbarActions([
+                CreateAction::make()
+                    ->createAnother(false),
             ])
             ->emptyStateIcon('tabler-speakerphone')
             ->emptyStateDescription('')

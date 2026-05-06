@@ -6,7 +6,6 @@ use App\Filament\Server\Resources\Files\Pages\ListFiles;
 use App\Models\Server;
 use App\Repositories\Daemon\DaemonFileRepository;
 use App\Traits\Filament\BlockAccessInConflict;
-use Boy132\MinecraftModrinth\Enums\MinecraftLoader;
 use Boy132\MinecraftModrinth\Enums\ModrinthProjectType;
 use Boy132\MinecraftModrinth\Facades\MinecraftModrinth;
 use Exception;
@@ -26,6 +25,7 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\HtmlString;
 
 class MinecraftModrinthProjectPage extends Page implements HasTable
 {
@@ -79,7 +79,7 @@ class MinecraftModrinthProjectPage extends Page implements HasTable
                 /** @var Server $server */
                 $server = Filament::getTenant();
 
-                $response = MinecraftModrinth::getModrinthProjects($server, $page, $search);
+                $response = MinecraftModrinth::getProjects($server, $page, $search);
 
                 return new LengthAwarePaginator($response['hits'], $response['total_hits'], 20, $page);
             })
@@ -106,15 +106,18 @@ class MinecraftModrinthProjectPage extends Page implements HasTable
             ->recordUrl(fn (array $record) => "https://modrinth.com/{$record['project_type']}/{$record['slug']}", true)
             ->recordActions([
                 Action::make('download')
+                    ->tooltip(trans('minecraft-modrinth::strings.actions.download'))
+                    ->icon('tabler-download')
+                    ->modalSubmitAction(false)
                     ->schema(function (array $record) {
                         $schema = [];
 
                         /** @var Server $server */
                         $server = Filament::getTenant();
 
-                        $versions = array_slice(MinecraftModrinth::getModrinthVersions($record['project_id'], $server), 0, 10);
+                        $versions = array_slice(MinecraftModrinth::getProjectVersions($record['project_id'], $server), 0, 10);
                         foreach ($versions as $versionData) {
-                            $files = $versionData['files'] ?? [];
+                            $files = $versionData['files'];
                             $primaryFile = null;
 
                             foreach ($files as $fileData) {
@@ -149,7 +152,8 @@ class MinecraftModrinthProjectPage extends Page implements HasTable
                                         ->state($versionData['changelog']),
                                 ])
                                 ->headerActions([
-                                    Action::make('download')
+                                    Action::make('exclude_download')
+                                        ->label(trans('minecraft-modrinth::strings.actions.download'))
                                         ->visible(!is_null($primaryFile))
                                         ->action(function (DaemonFileRepository $fileRepository) use ($server, $versionData, $primaryFile) {
                                             try {
@@ -187,7 +191,8 @@ class MinecraftModrinthProjectPage extends Page implements HasTable
 
         return [
             Action::make('open_folder')
-                ->label(fn () => trans('minecraft-modrinth::strings.page.open_folder', ['folder' => $folder]))
+                ->tooltip(fn () => trans('minecraft-modrinth::strings.page.open_folder', ['folder' => $folder]))
+                ->icon('tabler-folder-open')
                 ->url(fn () => ListFiles::getUrl(['path' => $folder]), true),
         ];
     }
@@ -205,7 +210,8 @@ class MinecraftModrinthProjectPage extends Page implements HasTable
                             ->state(fn () => MinecraftModrinth::getMinecraftVersion($server) ?? trans('minecraft-modrinth::strings.page.unknown'))
                             ->badge(),
                         TextEntry::make('Loader')
-                            ->state(fn () => MinecraftLoader::fromServer($server)?->getLabel() ?? trans('minecraft-modrinth::strings.page.unknown'))
+                            ->state(fn () => MinecraftModrinth::getLoaderFromServer($server)['display_name'] ?? trans('minecraft-modrinth::strings.page.unknown'))
+                            ->icon(fn () => new HtmlString(MinecraftModrinth::getLoaderFromServer($server)['icon'] ?? ''))
                             ->badge(),
                         TextEntry::make('installed')
                             ->label(fn () => trans('minecraft-modrinth::strings.page.installed', ['type' => ModrinthProjectType::fromServer($server)->getLabel()]))
