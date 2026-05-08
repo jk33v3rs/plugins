@@ -12,5 +12,5 @@ return [
         'danger' => env('THEME_CUSTOMIZER_COLORS_DANGER'),
     ],
 
-    'default_theme_mode' => env('THEME_CUSTOMIZER_DEFAULT_THEME_MODE'),
+    'default_theme_mode' => env('THEME_CUSTOMIZER_DEFAULT_THEME_MODE', 'system'),
 ];
