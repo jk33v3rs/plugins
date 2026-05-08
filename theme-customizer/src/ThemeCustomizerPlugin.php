@@ -62,7 +62,7 @@ class ThemeCustomizerPlugin implements Plugin
 
         $defaultThemeMode = config('theme-customizer.default_theme_mode');
         if ($defaultThemeMode) {
-            $panel->defaultThemeMode(ThemeMode::from($defaultThemeMode) ?? ThemeMode::System);
+            $panel->defaultThemeMode(ThemeMode::tryFrom($defaultThemeMode) ?? ThemeMode::System);
         }
     }
 }
