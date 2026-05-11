@@ -14,6 +14,7 @@ use Boy132\Billing\Models\ProductPrice;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
@@ -133,6 +134,30 @@ class OrderResource extends Resource
                                 ->persistent()
                                 ->send();
                         }
+                    }),
+                Action::make('change_expiration')
+                    ->visible(fn (Order $order) => $order->status === OrderStatus::Active)
+                    ->tooltip('Change expiration')
+                    ->color('warning')
+                    ->icon('tabler-clock-hour-4')
+                    ->schema([
+                        DateTimePicker::make('expires_at')
+                            ->label('Expires')
+                            ->placeholder('No expire')
+                            ->minDate(now())
+                            ->native(false)
+                            ->default(fn (Order $order) => $order->expires_at),
+                    ])
+                    ->action(function (Order $order, array $data) {
+                        $order->update([
+                            'expires_at' => $data['expires_at'],
+                        ]);
+
+                        Notification::make()
+                            ->title('Order expiration changed')
+                            ->body($order->getLabel())
+                            ->success()
+                            ->send();
                     }),
                 Action::make('close')
                     ->visible(fn (Order $order) => $order->status === OrderStatus::Active)
