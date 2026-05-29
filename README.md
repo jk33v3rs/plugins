@@ -4,11 +4,7 @@ A curated list of plugins for the [Pelican Panel](https://pelican.dev).
 
 ## How to install plugins
 
-[Download the repository archive](https://github.com/pelican-dev/plugins/archive/refs/heads/main.zip) and extract the folders of the plugins you want to install to your panels `plugins` folder (`/var/www/pelican/plugins` by default). Finally, open your panel and head to the plugins page and click on "Install".
-
-> [!IMPORTANT]
-> The plugin folder and the plugin id need to match!  
-> This means the plugin folder needs to be named the same as in this repo! (e.g. `player-counter` and _not_ `playercounter` or `plugins-player-counter`)
+It is highly recommended to install plugins via the [Hub](https://hub.pelican.dev/plugins/author/boy132). Simply login with Discord, connect your panel and install any plugin with a click!
 
 ### Additional setup for themes
 
