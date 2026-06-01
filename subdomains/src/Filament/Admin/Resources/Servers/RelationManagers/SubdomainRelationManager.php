@@ -83,7 +83,7 @@ class SubdomainRelationManager extends RelationManager
                     }),
                 CreateAction::make()
                     ->visible(fn () => CloudflareDomain::count() > 0)
-                    ->disabled(fn () => !$this->getOwnerRecord()->allocation || $this->getOwnerRecord()->allocation->ip === '0.0.0.0' || $this->getOwnerRecord()->allocation->ip === '::')
+                    ->disabled(fn () => !$this->getOwnerRecord()->allocation || in_array($this->getOwnerRecord()->allocation->ip, ['0.0.0.0', '::']))
                     ->createAnother(false)
                     ->action(function (array $data, SubdomainService $service) {
                         try {

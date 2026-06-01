@@ -90,7 +90,7 @@ class Subdomain extends Model implements HasLabel
                 'proxied' => false,
             ];
         } else {
-            if ($this->server->allocation->ip === '0.0.0.0' || $this->server->allocation->ip === '::') {
+            if (in_array($this->server->allocation->ip, ['0.0.0.0', '::'])) {
                 throw new Exception('Server has invalid allocation ip (0.0.0.0 or ::)');
             }
 
