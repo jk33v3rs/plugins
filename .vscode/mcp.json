@@ -1,0 +1,8 @@
+{
+    "servers": {
+        "pampa": {
+            "command": "npx",
+            "args": ["-y", "pampa", "mcp"]
+        }
+    }
+}

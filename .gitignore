@@ -2,5 +2,10 @@
 /.fleet
 /.idea
 /.nova
-/.vscode
 /.ddev
+
+# PAMPA index database (local only)
+/.pampa/
+
+# Track the codemap so teammates share context
+!pampa.codemap.json
